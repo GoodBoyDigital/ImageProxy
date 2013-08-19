@@ -1,0 +1,41 @@
+<!doctype html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title></title>
+  
+</head>
+
+<body>
+	<script>
+		
+		window.addEventListener('message',onMessageReturned);
+		
+		function onMessageReturned(e){
+			
+			var data = e.data;
+		  	var image = new Image();
+		  	
+		  	image.onload = function()
+			{
+				canvas = document.createElement("canvas");
+				canvas.context = canvas.getContext('2d');	
+				canvas.width = this.width;
+				canvas.height = this.height;
+				canvas.context.drawImage(this, 0, 0);
+				document.body.appendChild(canvas);
+				
+				var data = canvas.context.getImageData(0,0,canvas.width, canvas.height);
+				var imageString = canvas.toDataURL("image/jpeg", 0.8);
+				
+				window.parent.postMessage(imageString, "*");
+			}
+		
+			image.src = data;
+		}
+
+		window.parent.postMessage("loaded", "*");
+	</script>
+</body>
+</html>
